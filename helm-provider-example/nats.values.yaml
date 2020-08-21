@@ -1,0 +1,79 @@
+nats:
+  # Cuidado com a versão que estiver usando com esse comando.
+  # O statefulset deste chart nats sobre o nats passando o command 'nats-server ...'.
+  # A imagem `nats:2.1.7` define o nats-server como entrypoint, logo ela não funcionará!!!
+  # image: nats:2.1.7
+
+  pullPolicy: IfNotPresent
+
+  # Toggle whether to enable external access.
+  # This binds a host port for clients, gateways and leafnodes.
+  # PS.: o Cluster Nats Streaming atualmente opera como leafnode
+  externalAccess: false
+
+  # Toggle to disable client advertisements (connect_urls),
+  # in case of running behind a load balancer (which is not recommended)
+  # it might be required to disable advertisements.
+  advertise: false
+
+  # In case both external access and advertise are enabled
+  # then a service account would be required to be able to
+  # gather the public ip from a node.
+  # serviceAccount: "nats-server"
+
+  # # The number of connect attempts against discovered routes.
+  # connectRetries: 30
+
+  # # How many seconds should pass before sending a PING
+  # # to a client that has no activity.
+  # pingInterval: 
+
+  # # Server settings.
+  # limits:
+  #   maxConnections: 
+  #   maxSubscriptions: 
+  #   maxControlLine: 
+  #   maxPayload: 
+
+  #   writeDeadline: 
+  #   maxPending: 
+  #   maxPings: 
+  #   lameDuckDuration: 
+
+  # logging:
+  #   debug: 
+  #   trace: 
+  #   logtime: 
+  #   connectErrorReports: 
+  #   reconnectErrorReports: 
+
+cluster:
+  enabled: true
+  # replicas: 5
+
+# leafnodes:
+#   enabled: true
+
+natsbox:
+  enabled: false
+  # image: synadia/nats-box:0.3.0
+  # pullPolicy: IfNotPresent
+
+# In case of both external access and advertisements being
+# enabled, an initializer container will be used to gather
+# the public ips.
+bootconfig:
+  image: connecteverything/nats-boot-config:0.5.2
+  pullPolicy: IfNotPresent
+
+# The NATS config reloader image to use.
+reloader:
+  enabled: false
+#   image: connecteverything/nats-server-config-reloader:0.6.0
+#   pullPolicy: IfNotPresent
+
+# Prometheus NATS Exporter configuration.
+exporter:
+  enabled: true
+  image: synadia/prometheus-nats-exporter:0.6.2 # TODO parametrizar com o exporter do stan
+  pullPolicy: IfNotPresent

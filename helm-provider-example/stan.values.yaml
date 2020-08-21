@@ -1,0 +1,33 @@
+stan:
+  # nats:
+  #   url: "nats://nats:4222"
+  # replicas: 3
+  cluster:
+    enabled: true
+  image: "nats-streaming:0.18.0"
+  pullPolicy: "IfNotPresent"
+  # clusterID: "stan-cluster"
+  # logging:
+    # debug: true
+
+store:
+  type: "file"
+  volume:
+    enabled: true
+    mount: /data/stan
+    storageSize: 1Gi
+    accessModes: ReadWriteOnce
+    # storageClass:
+  cluster:
+    enabled: true
+    logPath: /data/stan/log
+  file:
+    path: /data/stan/store
+
+affinity:
+  podAntiAffinity:
+
+exporter:
+  enabled: true
+  image: synadia/prometheus-nats-exporter:0.6.2
+  pullPolicy: IfNotPresent

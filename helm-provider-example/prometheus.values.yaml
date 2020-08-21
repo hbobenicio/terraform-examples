@@ -1,0 +1,37 @@
+nodeExporter:
+  enabled: false
+  
+kubeStateMetrics:
+  enabled: false
+
+alertmanager:
+  enabled: false
+
+pushgateway:
+  enabled: false
+
+server:
+  global:
+    scrape_interval: 20s ## How frequently to scrape targets by default
+    scrape_timeout: 10s ## How long until a scrape request times out
+    evaluation_interval: 20s ## How frequently to evaluate rules
+  # ingress:
+  #   enabled: true
+serverFiles:
+  prometheus.yml:
+    scrape_configs:
+      - job_name: job-nats-cluster
+        static_configs:
+          - targets:
+            - 'nats-0.nats:7777' # TODO vars.nats_cluster_name
+            - 'nats-1.nats:7777' # TODO vars.nats_cluster_name
+            - 'nats-2.nats:7777' # TODO vars.nats_cluster_name
+            labels:
+              cluster_name: nats # TODO vars.nats_cluster_name
+          - targets:
+            - 'stan-0.stan:7777' # TODO vars.nats_cluster_name
+            - 'stan-1.stan:7777' # TODO vars.nats_cluster_name
+            - 'stan-2.stan:7777' # TODO vars.nats_cluster_name
+            labels:
+              cluster_id: stan # TODO vars.nats_cluster_name
+              cluster_name: stan
